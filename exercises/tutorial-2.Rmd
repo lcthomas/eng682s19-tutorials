@@ -1,0 +1,331 @@
+---
+title: 'Tutorial 2: Data frames'
+author: "Ryan Cordell, Lindsay Thomas"
+date: "2/25/2019"
+output: html_document
+---
+# Acknowledgements
+
+This tutorial is adapted from Ryan Cordell's "DataFrames.Rmd" exercise from his Spring 2017 course, ["Humanities Data Analysis"](http://s17hda.ryancordell.org/), on which it draws heavily. See the original exercise in that course's Github repo: ["DataFrames.Rmd"](https://github.com/rccordell/s17hda/blob/master/exercises/DataFrames.Rmd). It also draws on Chapter 2, "A Short Introduction to R," from Taylor Arnold and Lauren Tilton's book *Humanities Data in R: Exploring Networks, Geospatial Data, Images, and Text* (Springer, 2015).
+
+# Load Required Packages
+
+Most of what we do in this tutorial uses functions from the packages `tidyr` and `dplyr`, which are both included in `tidyverse`. So we need to load the `tidyverse` package. If you're returning to this tutorial, make sure to load the required packages and set your working directory (see below) before you pick up where you left off. Again, I am assuming you have installed the `tidyverse` package onto your computer (which we did in tutorial 1).
+
+```{r}
+library(tidyverse)
+```
+
+# Set Your Working Directory
+
+Use your computer's Finder or File Explorer interface to navigate to the folder where you have saved the course repo you downloaded from Github now. Where does it live *on your computer*? Write the full, or absolute, file path below:
+
+
+Now, set this session's working directory to this folder. 
+
+Next, write in the file path of your `data` folder (included within this folder) below:
+
+
+This is where you are going to ask R to look for the data you are going to load. 
+
+# Data Frames and Other Objects in R
+
+Everything in R is an object. Here's an example:
+
+x <- 1 + 2
+
+Go ahead and run that line of code above. You have now created an object that has a value of 3 (if you look over in your Environment pane, you should now see `x` appear under `Values`). This object is stored in the variable `x`. Additionally, every object in R belongs to a *class* describing the type of object it is. You can check the class of any objec using the `class()` function, like so:
+
+class(x)
+
+When you run that code above, you will see that `x` belongs to the class `numeric`, meaning it is a numeric vector object. Other classes of objects in R include other kinds of vectors (there are 6 different kinds of vectors, including character vectors), lists, matrices, and data frames (Vectors? you might be thinking, Isn't that related to math? Yes -- important to note here that R has a long history as a tool for statistical analysis, and its data structures reflect this purpose.) Data types are important and sometimes frustrating in R; there are functions that can operate on strings (text data) but not other kinds. Right now, though, it's not so important that you learn about these different kinds of data, although if you are interested in learning more, you might want to read through chapter 2 from Arnold and Tilton's book *Humanities Data in R,* which I've included in the "Additional Reading" folder in our course Box folder. In this tutorial, we're going to focus on data frames.
+
+Data frames are perhaps one of the most prevalent objects in the base language of R. You can think of data frames as something like spreadsheets: they consist of values arranged into columns and rows, which can have labels. Here's a simple example:
+
+```{r}
+#create a data frame object and store it in the variable df
+df <- data.frame(a=1:5, b=21:25, c=1:5 +.5)
+class(df)
+```
+
+Run the code above, then look over in your Environment pane under `Data`. You will now see the `df` object you just created. Go ahead and click on the spreadsheet-looking icon on the right (remember this does the same thing as the command in `View(df)`, check your console as you do his!). You are looking at the `df` data frame. Look at the `data.frame` function above: how does this function correspond to the data frame you are looking at (including the values that are in each cell)? Use `help(data.frame)` if you want a more formal explanation of how the function works. 
+
+Every data frame object in R has 3 attributes: the dimension of the data frame, the column names, and the row names. You can access these as follows:
+
+```{r}
+dim(df)
+colnames(df)
+rownames(df)
+```
+
+What are these results telling you? Write a definition of what each funcion does in your own words below.
+
+`dim()` function:
+`colnames()` function:
+`rownames()` function:
+
+You can also change the names of the columns and rows in any data frame by assigning a new value to them like this:
+
+```{r}
+colnames(df)[2] <- "newName"
+df
+```
+
+What happened? What does the `[2]` mean in the above code? Write your answer below:
+
+
+You can also add columns to existing data frames like this:
+
+```{r}
+df$newColumn <- 5:1
+```
+
+Go back and view the `df` object. What has changed? Write your answer below:
+
+
+
+# Reading in Tabular Data
+
+In order to work with data in R, you need to use R to "read" it into the computer. In tutorial 1, we used the `read_file` function to grab some data from the "Chronicling America" database online. Use RStudio's help feature to look up the `read_file` function, and copy and paste the description from the documentation below.
+
+`read_file` Description:
+
+
+Now, write no more than 1 sentence describing what the `read_file` function does *in your own words*:
+
+
+For this tutorial we're going to use some data that's in the `data` folder of the repo you downloaded from Github. Depending on the structure of the data you wish to read into R, you will typically use `read.table`, `read.csv`, or `scan` (again, for data stored on your computer that you wish to bring into the R environment). Often, if there is something even slightly askew about your input data, `read.table` will fail. This may be frustrating, but this failure is a general feature of data analysis: programs that don't receive *exactly* the input they expect will simply fail to work, usually "throwing" an error message of some sort. You may have to spend some time troubleshooting your data itself to figure out why it won't import into R.
+
+If you have a file previously saved in the csv (comma-separated-value) format, it may be fast to read it it using the `read.csv` function. (This is simply `read.table` with a certain set of constraints.)
+
+In the example below, you see the absolute path to the data on my computer. You'll need to modify the path in the quotation marks to navigate the folder in your file system to where you have stored the data files for this class. Copy and paste it from above, making sure to add on the specific filename for the 1840 census data (`1840-census-data.csv`).
+
+```{r}
+census <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+```
+
+# Browsing Tabular Data
+
+If you type `View(census)` or click the table icon next to `census` in the Environment pane, you can visually browse the dataframe we just created.
+
+When we work with dataframes, we can operate on individual columns using the `$` operator. If we type `census$Slave_Female` in the console, for instance, it would print all the values from that one column. We usually won't use this to print, however, but to select particular columns to operate on in other ways.
+
+Let's not forget some of the basic ways of browsing data we discussed last week. Can you write code below that prints the first lines of the `census` dataframe? The last? Can you print the first or last lines of specific columns in `census`? (Hint: Open up tutorial 1 and search [Command + F on a Mac, control + F on a Windows machine, or Edit --> Find in RStudio] for the `head()` and `tail()` functions...)
+
+```{r}
+# print the first lines of the census dataframe
+
+# print the last lines of the census dataframe
+
+# print the first or last lines of one specific column in the census dataframe
+
+```
+
+There are a few other fuctions worth knowing right off the bat. Run the code below: what does `summary` do? Write a brief explanation below the code block.
+
+```{r}
+summary(census$Newspapers)
+summary(census$FreeColoredPopulation)
+```
+Explanation of `summary` function (in your own words):
+
+## Subsetting columns
+
+This is a very wide data frame of census data. In fact, it's a bit too wide for R studio, which will only display 100 columns in the table viewer; this table has 113 columns. For any given analysis task, we probably don't need all of the columns in such a wide data frame. Fortunately R and the `tidyverse` packages give us lots of ways to pare down the data we're working with. 
+
+Remember that in the last tutorial we talked about changing variables. That's one way to pare down a dataset: essentially we invoke the data frame, select only a few columns of it using the `select` function in `dplyr`, and replace the whole variable with just those selected columns. That would look like this:
+
+```{r}
+census <- select(census, QualifyingAreaName, Newspapers, Newspapers_Daily, Newspapers_Weekly, Newspapers_SemiTriWeekly, Periodicals, PrintingOffices, Binderies, NumberofPersonsEmployedinPrintingBinding)
+```
+
+Now we have only 9 variables (or columns) in our data frame, which is focused on the data recorded about newspapers and printing in the census. In this case we overwrote the whole census variable with this smaller data frame, but we could have created a new variable focused on printing (say `censusPrinting`) and retained the larger `census` variable as well. 
+
+If you know the data you're importing well, you can also select particular columns on import. I further truncated the columns below so you can see a difference (hold up! make sure to change the file path to the correct location of the "1840-census-data.csv" on your computer):
+
+```{r}
+census <- read.csv(file="/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")[ , c("QualifyingAreaName", "Newspapers", "Newspapers_Daily", "Newspapers_Weekly", "Newspapers_SemiTriWeekly", "Periodicals", "PrintingOffices")]
+```
+
+We can also rename columns with, you guessed it, the `rename` function. That first column in `census` has an awkward name, so let's just change it:
+
+library(dplyr)
+
+```{r}
+census <- rename(census, county = QualifyingAreaName)
+```
+
+Note: if the above throws an error for you, try this version (if you want to know what differentiates these two lines of code, I'm happy to explain):
+
+```{r}
+census <- dplyr::rename(census, county = QualifyingAreaName)
+```
+
+How and why is this method of renaming columns different from the one introduced above (which looked like this: `colnames(df)[2] <- "newName"`)?  Write your answer below the `### A:` heading. Hint: Take a look at [this page](https://dplyr.tidyverse.org/reference/select.html) to learn more about the `rename` function, which is a part of the `dplyr` package. You can also find this info by searching for `rename` using RStudio's help feature, and scrolling down to `dplyr::select`.
+
+### A:
+
+
+There are also ways to subset by rows that meet particular conditions, as in:
+
+```{r}
+printCenters <- filter(census, PrintingOffices >= 5)
+```
+
+What did the above line of code do? Write a brief answer below the heading.
+
+### A:
+
+
+
+We can also add new columns with `mutate`. These new columns can include an entirely new bit of data we wish to add or can be derived from operations made on other columns, as in:
+
+```{r}
+census <- mutate(census, serials = Newspapers + Periodicals)
+head(census$serials)
+```
+
+Can you see what happened there? Go ahead and inspect the `census` object again. Again, think about how this method of adding columns to the data frame is different from the one introduced at the beginning of this tutorial. Write down a brief statement explaining the differences below.
+
+### A:
+
+
+
+Finally (in this section), we can rearrange the data frame. Keep in mind that `arrange` reorders the actual data frame permanently, or as permanently as is possible in a variable. To sort by the number of serials in each county, we could write:
+
+```{r}
+census <- arrange(census, serials, Newspapers, Periodicals)
+```
+
+You only need to specify one column for `arrange` to work, but if you specify more it will use them in sequence, much as you use the letters in words in sequence when sorting into alphabetical order (e.g. first sort by `serials`, then by `Newspapers`, then by `Periodicals`). You'll note that by default `arrange` sorts in ascending order. If we wanted to instead order this data frame to bring the most active print economies to the top, we would add `desc` to our code:  
+
+```{r}
+census <- arrange(census, desc(serials, Newspapers, Periodicals))
+```
+
+If the above throws an error for you, try this:
+
+```{r}
+census <- dplyr::arrange(census, desc(serials, Newspapers, Periodicals))
+```
+
+Okay: in the code block below, import the census data again (use a new variable name) and then select only 3-4 columns of interest. Then filter the data frame by a value in one of those columns. 
+
+```{r}
+# import the same census data, using a new variable
+
+# select 3-4 columns of interest
+
+# filter the data frame by a value in one of those columns
+
+```
+
+# Manipulating Dataframes
+
+Above we made some relatively minor changes to a dataframe, but in the next section we'll do a bit more. As you move through this section, the [Data Wrangling Cheat Sheet](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf) may prove very useful to help you keep track of it all. I recommend you bookmark it, at least, and perhaps print it out to use as a reference sheet while you complete the rest of the tutorial. 
+
+## Separate
+
+Let's start with `separate`, which will allow us to break apart columns that use a consistent separator (a repeating pattern that separates one column from the next). The newly-renamed `county` column, for instance, actually includes both the county and the state, and since they are consistently divided by a comma and space, we can use the fuction below to separate them into two columns:
+
+```{r}
+census <- separate(census, county, into = c("county", "state"), sep = "\\, ")
+```
+
+That threw a few errors, though `tidyr` made the separation anyway. What changed? How is this new `census` object different from the old one? Write you answer below.
+
+### A:
+
+
+
+If you wanted to investigate one of those problematic observations, you could type in the console `census[1259,]` (or sustitute any of the other rows for 1259). This is another way of selecting particular rows. In this case we're not entering anything after the comma because we want to see all the columns, but you could instead type `census[1259,1:2]` to see row 1259, columns 1-2. You can also view the `census` object. Why did we get some errors when we ran the `separate` function above? What do the "problematic" cells contain? Write your answer below.
+
+### A:
+
+
+
+## Gather
+
+For these next functions we're going to reimport our census data but select a different set of columns: those describing the racial/ethnic/gender/age identification of the populations in each county. The current format of this data is "wide," meaning there are many columns of variables. For certain kinds of analyses, these column names are themselves variables, representing the identities of citizens, at least insofar as the census taker appraised them. We might want to `gather` our data into a "long" format, which means there will be many more rows but fewer columns, which will prove useful for certain kinds of analyses. If you want to see what each line is doing, run them using ctl-enter rather than the run button.
+
+```{r}
+# remember to change the filepath to the correct location on your computer before importing!
+census <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+census <- select(census, 1,6:81)
+census <- dplyr::rename(census, county = QualifyingAreaName)
+census_long <- gather(census, "identification", "count", 2:77)
+census_long <- separate(census_long, county, into = c("county", "state"), sep = "\\, ")
+census_long <- na.omit(census_long)
+```
+
+What does each line of code above do? Write your answers below, making sure to explain each line.
+
+### A:
+
+
+## Group_by
+
+Why would we do this? Well, for one we could now use the `group_by()` function on our `identification` column to group all observations of the same identification, and then perform operations on those groups. 
+
+```{r}
+census_long <- group_by(census_long, identification)
+census_ids <- summarize(census_long, total_ids = sum(count))
+```
+
+What does each line of code above do? Write your answers below.
+
+### A: 
+
+
+
+That's possibly interesting, but maybe we want to group by identification and then by state, so we can see how these categories break down by state. Fortunately we now have a state column, so we can do this:
+
+```{r}
+census_long <- group_by(census_long, state, identification)
+census_ids <- summarize(census_long, total_ids = sum(count))
+```
+
+What does each line of code above do? Write your answers below.
+
+### A:
+
+
+
+## Spread
+
+Spread, as you might imagine, does just the opposite of gather. It takes long data and makes it wide. So we can run the following to reshape our `census_long` dataframe into something very like the wide dataframe with which we began.
+
+```{r}
+census_wide <- spread(census_long, identification, count)
+View(census_wide)
+```
+
+# Exercises
+
+Note: I've included an RMD file with the answers to these exercises in the repo you downloaded from Github (in the `exercise-answers` folder). Feel free to use it if you get stuck, but make sure you can explain what happens in each line.
+
+1. Create a new column that shows the ratio of `FreeColoredPopulation` to `SlavePopulation` in each county. You may need to repeat some of the import steps above, and you can use a new variable if you wish. 
+
+```{r}
+# write your code here
+
+```
+
+2. Create a "long" dataframe with columns for "publication_type" (e.g. "Newspaper") and "count". 
+
+```{r}
+# write your code here
+```
+
+3. Determine the state (not the county!) with the highest population of literate whites over 20 years old, then determine the state with the highest ratio of literate whites to the general population.
+
+```{r}
+# write your code here: highest population of literate whites?
+
+```
+
+```{r}
+# write your code here: highest ration of literate whites to the general population?
+```
+
+Send the completed, rendered HTML version of your tutorial to me by class on Monday, February 25.

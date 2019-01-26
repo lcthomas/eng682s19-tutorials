@@ -1,0 +1,424 @@
+---
+title: "Tutorial 1: Introduction"
+author: "Ryan Cordell, Lindsay Thomas"
+date: "2/18/2019"
+output: html_document
+---
+# Acknowledgements
+
+This tutorial is adapted from Ryan Cordell's "GrammaR.Rmd" and "DataFrames.Rmd" exercises from his Spring 2017 course, ["Humanities Data Analysis"](http://s17hda.ryancordell.org/), on which it draws heavily. See the original exercises in that course's Github repo: ["GrammaR.Rmd"](https://github.com/rccordell/s17hda/blob/master/exercises/GrammaR.Rmd); ["DataFrames.Rmd"](https://github.com/rccordell/s17hda/blob/master/exercises/DataFrames.Rmd).
+
+# Package loading for reference
+
+If this is your first time opening this tutorial, skip over this section. We'll talk about it in class. If you're returning to this tutorial to continue working on it, load the following packages (this assumes you have already installed these packages):
+
+library(tidyverse)
+library(dplyr)
+library(tidytext)
+library(wordcloud)
+
+# To go over in class on Monday, Feb 11
+
+We will go through the following sections together in class on Monday, Feb 11.
+
+## Notes Before We Begin
+
+In general, the tutorials in this class are not designed to teach you "how to code." Rather, they are designed to introduce you to the basics of working with code, in this case R, so that you can develop some familiarity and literacy with the process. The focus of this tutorial is on introducing you to R and to RStudio *in general* -- again, it is not on teaching you to follow step-by-step instructions. A lot is going to happen that you may not fully understand right now, and that's ok. My experience with programming as an academic -- and with teaching myself programming as an academic -- has been that **I learn what I need to know, when I need to know it, as I go along.** The point right now is to try to follow along with the logic and the concepts, not necessarily the code syntax itself.
+
+If you are confused by something, you can use R's built-in help feature (explained below) to look up packages and functions you don't know. Also, don't be afraid to simply Google things and/or to use Stack Overflow. The good thing about learning about programming as an academic is that many, many people have encountered the same problems that you will encounter. Learning how to take advantage of this and to use Google/Stack Overflow to answer questions is a very important skill, and tutorials 2 and 3 will increasingly ask you to do just this. Remember, our goal is not fluency, but rather basic literacy. 
+
+## R and RStudio
+
+R is a programming language with particular strengths in statistical analysis and data visualization. You're reading this file right now in RStudio, which is what's called an integrated development environment (IDE) for R. In class on Monday, Feb 11, we will talk through what this means, as well as some of the basic features of RStudio (including what the different panes you're seeing on your screen now mean).
+
+What you're reading right now is an [R Markdown document](http://rmarkdown.rstudio.com/) (more on that below). You can view R Markdown files (saved with the extension `.Rmd`) in RStudio, but you can also use RStudio to view plain old R scripts (saved with the extension `.R`). R scripts are still what most R programming is written in. I have uploaded an R script I've used for one of my projects to our course's Github repo. If you've downloaded the repo in ZIP form, this means you now have this script on your computer. Go to wherever you've saved the course repo on your computer, go in to the `data` folder, and open up the file called `sci-lit-2018-class.R`. It should open in RStudio. Read on to the next two sections for some comparisons between R and RMD files.
+
+## R Markdown
+
+This tutorial, however, is not written as a "regular" R script; it is an [R Markdown document](http://rmarkdown.rstudio.com/), which adapts the syntax of Markdown: a lightweight standard for writing in plain text while encoding the *structure* of your document for later representation in a format like Word, PDF, or HTML. If you have ever marked up a text using HTML or XML (or TEI) tags, Markdown works quite similarly, but uses simple typographical symbols to encode text rather than longer HTML tags.
+
+R Markdown blends markdown conventions with a few customizations that let you embed snippets of code, as well as any outputs (e.g. graphs, maps) produced by that code into Markdown documents. This lets you weave together prose and code, so your readers can see the technical aspects of your work while reading about their interpretive significance. You can *render* R Markdown documents in a variety of ways: as HTML files, as PDFs, as Word documents, etc (you do this by clicking the `Knit` button above and choosing your output from the dropdown menu). You can view the HTML version of this tutorial on our course website (go to the "Schedule" page and find the link under Feb 11). Looking at this tutorial as an HTML file allows you to see how the Markdown syntax translates for presentation on the web. `.R` scripts don't render in this way, and so they don't blend code and prose *as easily.*
+
+## R Markdown
+
+RMD files also have other advantages over R files. As an RMD file, this is more than a flat text document: it's a program that you can run in R. R Markdown allows you to embed executable code into your writing. If you click the green 'run' arrow in the gray box below (if you mouse over it, the label "Run 
+Current Chunk" will appear), the code will run. You should see the results in your console window. Try that now.
+
+```{r}
+2+2
+5^32
+```
+
+As in most programming languages, you can do math in R, though we won't do much of this in our class. 
+
+In addition to using the run buttons above, you can also run R code *one line* at a time by selecting the code you want to run or putting your cursor on the individual line of the code you want to run and hitting the `Run` button up at the top of the file window (or by hitting `control-return`). If I don't use the R Markdown syntax to make an executable code block (by surrounding the code with three backticks and including the `{r}` designator) then you'll have to run the code using the `Run` button or via `control-return`. When you work with regular R documents — without the markdown — this will be the primary way you run code (as in the example R script you downloaded from our course repo). Try running this code by selecting the line and hitting `control-return`:
+
+2+2
+
+This is how we will be interacting with RMD files in this class: You will open them up in RStudio, and work through them section by section, or line by line, as the case may be. When you are done, you will render your RMD file (or files, as the case may be) as HTML so that all of your output shows, and then email me these completed HTML files. 
+
+## Markdown
+
+I'm asking you to compose in R Markdown for the three tutorials we will be doing in this class, but we aren't going to spend too much time learning Markdown itself. These resources will help:
+
+* The [Markdown Wikipedia page](https://en.wikipedia.org/wiki/Markdown) includes a very handy chart of the syntax.
+* John Gruber developed Markdown and his [introduction to the syntax](https://daringfireball.net/projects/markdown/syntax) is worth browsing.
+* This [interactive Markdown tutorial](http://www.markdowntutorial.com/) will teach you the syntax in a few minutes.
+
+In brief, here's what you need to know:
+
+* Headings: `#`. Hastags designate headings in a hierarchical structure. The more hashtags, the farther down the hierarchy that heading is. Examples: `# Heading 1`, `## Heading 2`, `### Heading 3`, etc. Heading numbers correspond to the size of the heading. The more hastags, the smaller the heading. In this document, the heading "To go over in class on Monday, Feb 11," is an H1 heading (set off with one hashtag). The sub-headings under that, including "Notes Before We Begin" and "R and RStudio," are H2 headings (set off with two hashtags). Look at the HTML version of this tutorial to compare their respective sizes.
+* Links. Here's how you format a link in Markdown: [text you want to be linked](http://WhateverTheLinkIs) --> [our course site](http://lindsaythomas.net/eng682s19). Again, check the HTML version of the tutorial to see this in action.
+* Bold: To make a word or phrase bold, place two asterisks around it. Ex: `**this is bolded**` --> **this is bolded**. See it in action in the HTML version of the tutorial.
+* Italics: To italicize a word or phrase, place one asterisk around it. Ex: `*this is in italics*` --> *this is in italics*. See it in action in the HTML version of the tutorial.
+
+## Commenting Code
+
+You can comment your R code blocks to provide additional instructions to the reader. Commented code looks like this:
+
+```{r}
+# adding these two numbers will equal 4
+# this is a really long comment that is going to stretch over the space of one physical line on the screen but as far as the computer is concerned this is all still just one line because I haven't hit the "return" button yet, so it's all still commented out as one single line and it's all still on line 81 (i.e., in RStudio it's all still green)
+2 + 2
+```
+
+The writing that appears in green in the code block (next to the hashtag) will not execute. The hashtag symbol tells the computer this is a comment, or writing for humans. If you are writing comments in your code blocks, you must make sure that EACH LINE is "commented out," or that it begins with a `#` symbol, otherwise the computer will think it's code (A note on lines of code: See the line numbers in the left margin here [i.e., line 80 is commented out]? These designate new lines. Sometimes a "line" of code can run over what looks on the screen like multiple lines of code because of automatic text wrapping in RStudio [i.e., line 81]. However, unless you create a new line by hitting the return button, the computer will recognize this as just one line. Check out the line numbers again: how many lines of code does the comment on line 81 take up?). In a regular R script (not RMD), the comments are often the only place you'll find explanatory prose, so keep an eye out for them. 
+
+## Navigating Files in R and Setting Your Working Directory
+
+If you've only browsed files through your computer's graphical user interface (GUI) you might not realize this, but your computer's files exist in directories (aka folders), which exist in *paths* that look much like URLs. To illustrate this, we're going to browse around in your Terminals/Consoles for a few minutes before we jump back into R.
+
+At any given time, R refers to a particular "working directory" on your hard drive. Any paths to data you construct take this working directory as their root. So if my working directory is `"Dropbox/Teaching/eng-682/tutorials/"` then invoking `"/data/crewlists.csv"` would begin from that home, or working, directory and look for a subdirectory called `data` and then a file within that working directory. Many, many times problems importing or working with data can be tracked down to R looking in the wrong working directory. So, to check your working directory, you can run:
+
+```{r}
+getwd()
+```
+
+If the working directory is not what you want, you can set it in two ways: through the menus for Session --> Set Working Directory or through the command below. The path to the directory you want should go inside the quotation marks.
+
+```{r}
+setwd("")
+```
+
+Keep in mind too that you can browse your files in in the `Files` pane of RStudio.
+
+## Start a New R Project
+
+The next thing you should do is start a new R project for this class. You can either select an existing directory — perhaps the one where you've saved the exercise files — or create a new one. You'll be saving all of your work for the semester here. Next, set your working directory in RStudio to this directory (Session --> Set Working Directory).
+
+We will talk briefly about R Projects in class, but here is some information about them: [https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects).
+
+-----
+
+Complete the rest of the tutorial on your own, including the exercises, and email me your completed tutorial and exercises by class on Monday, Feb 18.
+
+# R Basics
+
+What follows is an introduction to some the of basics of R and of RStudio. As we go along, I will provide you with code that illustrates particular ideas I want you to understand now. There will be complexities we will not explore, so don't worry if not every line makes perfect sense right now. Make sure you just understand the principles discussed here and feel free to ask questions when we discuss the tutorials in class or in our coding work sessions.
+
+## Installing Packages
+
+The first thing we're going to do is install an *R package*: a collection of functions, data, and documentation that extends the capabilities of base R. You can do a lot in base R, but packages make many tasks much easier, and knowing how to install them is essential. [Tidyverse](http://tidyverse.org/) isn't actually one package, but a collection of packages that share a common philosophy and work well together. The tidyverse packages are quite useful for working with dataframes, R's standard for tabular data like CSVs and TSVs, which are essential for most humanistic data analysis (more on dataframes next week). 
+
+To install an R package, you can either click Tools --> Install Packages or run code like this:
+
+```{r}
+
+install.packages("tidyverse")
+
+```
+
+It may take a few minutes for all the tidyverse packages to install. In order to actually use packages in a given script, you must load them using the `library()` function. You will usually load all of the packages you wish to use in a given script at the beginning, so that the functions, objects, and help files of that package will be available to you as you work.
+
+```{r}
+
+library(tidyverse)
+
+```
+
+In the box below, write six lines of code to install and then load the packages `dplyr`, `tidytext`, and `wordcloud,` which we will need for the rest of the tutorial. You can copy, paste, and modify from above.
+
+```{r}
+
+# write your code to install the packages below:
+# install dplyr
+
+# install tidytext
+
+# install wordcloud
+
+library(dplyr)
+library(tidytext)
+library(wordcloud)
+
+```
+
+A note about installing and loading packages: In general, you only need to install a package once onto a particular machine. However, each time you start a new R session, you will need to reload the packages you want to use.
+
+## Getting Help with Functions
+
+Functions are like little recipes that do defined tasks, packaged up into one single command. All R packages come with predefined functions to help you accomplish certain tasks specific to that package. If you want to know what a particular function does, you can access help documentation using `?` or `help()`. So if you wanted to know what the `spread` function (from the package `tidyr`) does, you could run:
+
+?spread
+
+*or* 
+
+help(spread)
+
+Note that the code above *is not* in a code block: how do you run it? Write your answer below the `### A:` heading.
+
+### A:
+
+
+## Sample Data
+
+In [http://ryancordell.org/research/qijtb-the-raven/](http://ryancordell.org/research/qijtb-the-raven/) Ryan Cordell describes the OCR of the *Lewisburg Chronicle, and the West Branch Farmer* as it appears in the Library of Congress' [Chronicling America](http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/) archive. Let's use that newspaper to extend our understanding of the basics of R. Note: Cordell heads up the [Viral Texts project](https://viraltexts.org/), which maps networks of reprinted articles from 19th-century newspapers and magazines. This data comes from that project.
+
+Ok, this little bit of code below is going to go onto the web and read the text from page 1 of the *Lewisburg Chronicle* (28 November 1849) — on which Edgar Allan Poe's poem "The Raven" appears — into a dataframe of one row and one column. 
+
+## Loading and Exploring Data
+
+```{r}
+
+raven <- data_frame(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"))
+
+```
+
+We'll talk more about dataframes and other R data formats in the next tutorial. For now, however, I want to use this very simple dataframe to outline some of R's basic grammar and the RStudio's functionality.
+
+First, what is that word `raven` in the code above? It's a variable, which means that it stores data for use in later processing. The `<-` assigns the data to its right (which could be loaded from outside R, as here, or which could be the results of a process within R) to the variable on its left. You can use `=` to do the same, which is why this code will do exactly what the code above did:
+
+```{r}
+
+raven = data_frame(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"))
+
+```
+
+I prefer `<-` to `=` because the latter is used for some other purposes in R, and thus I find `<-` less confusing, but you should determine which you prefer. You don't have to be consistent, even, but it helps make your code more readable if you are.
+
+If you look in your "Global Environment" panel in R Studio, you should now see `raven` listed under "Data." That panel will list all of the variables and other data currently in memory that can be invoked in your scripts. You can click the little grid next to `raven` in order to load the data frame in a new window, or you could run this code to do the same:
+
+```{r}
+
+View(raven)
+
+```
+
+You might not want to include a function like `View()` in your actual code; you might just want to quickly look at your data without saving that act of looking in your actual script. If you want to run code but not save it, you can type it directly in your console and just hit return. Try running `View(raven)` directly in the console now. 
+
+A few important but perhaps not obvious points about variables:
+
+1. Their names are arbitrary. We could have called this variable `raven` or `Lewisburg` or `sn85055199` or `hotDog` (save using a few characters reserved for special uses in R, which we aren't going to worry about now). Folks have very different philosophies about naming variables, and the best practice often depends on the uses to which a particular bit of code might be put. If we were writing a general script for detecting text reuse in newspaper pages, the highly specific `raven` might not be the best choice. We might instead opt for `newspaper_pages` or something that makes the general meaning of that variable within the script plain.
+
+2. Variables can be reassigned. You may have noticed that we loaded data twice, though with only slightly different settings, into the variable `raven`. Often you will transform your data and replace a variable with the transformed version, but you want to be careful when doing so. A variable holds the data you've assigned it until it is reassigned or until you quit R (that's not precisely right, but it's good enough for now). 
+
+3. We assign data to variables so that we can easily invoke that data for various kinds of analyses and transformations. We'll see some of those in the following. 
+
+## Very, Very Basic Text Analysis 
+
+First let's once again reload the data in a slightly different format: 
+
+```{r}
+
+raven <- tibble(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt")) # a tibble is special kind of dataframe we'll learn more about next week
+
+```
+
+(Notice the comments in the code block above?)
+
+Ok, so let's do a little basic text analysis. 
+
+With the computer we can very easily start counting, for instance counting various "tokens" in the text, such as individual words...
+
+```{r}
+
+raven %>% 
+  unnest_tokens(word,text) %>%
+  count(word,sort=T)
+
+```
+
+Which we can visualize in wordclouds, such as those you may have seen on a website like Wordle. 
+
+```{r}
+
+raven %>% 
+  unnest_tokens(word,text) %>%
+  count(word,sort=T) %>% 
+  with(wordcloud(word,n,max.words = 100))
+
+```
+
+That isn't very satisfying, is it? This word cloud includes nothing but commons words such as articles and conjunctions.
+
+In this — and indeed most — texts, the most common words are much, much more common than the least common words. For many text analysis purposes, we'll want to filter out what are called "stop words": essentially, words so common as to be uninteresting for analysis (or so variously resonant as to be difficult to frame for analysis). There are ready made stop list words for most languages, and researchers can customize their stop lists based on the features of their corpora. Fortunately tidytext (one of those packages we installed earlier) includes a nice stop list we can use. Load the tidytext package if you haven't done so already.
+
+```{r}
+# What is the code for loading the tidytext package?
+
+```
+
+Again, someone has done the work for you already. There's data included in our tidytext package called "stop_words," and some example code [online](https://cran.r-project.org/web/packages/tidytext/vignettes/tidytext.html) about how to use it. Here's how you can use it:
+
+```{r}
+
+data("stop_words") # <- Load the stop words data
+
+raven %>% 
+  unnest_tokens(word,text) %>%
+  count(word,sort=T) %>% 
+  anti_join(stop_words) %>% #This is the only change to our word cloud visualization from up above. This removes stop words from the text of "The Raven."
+  with(wordcloud(word,n))
+
+```
+
+In addition to words, R makes it very easy to count (and compare, etc.) other units of language, such as bigrams, trigrams, and so forth. Units of n-length words are called "Ngrams." When building an index of ngrams, each possible sequence of n words is recorded, as if a lens with a n-words-long aperture is sliding along the text, taking a snapshot at each position. Below we're counting units of 5 words from our newspaper text data.
+
+```{r}
+
+raven %>%
+  unnest_tokens(word,text,token="ngrams",n=5) %>%
+  count(word,sort=T)
+
+```
+
+That bit of code counts and sorts the ngrams on the page, so that we can see how many appear multiple times. This could be really useful for identifying ideas, themes, settings, and so forth, if we had a larger corpus across which to search. Note that we're not changing anything about the `raven` variable here and we are not storing the derived data about ngrams, though we could if we wanted to. The `%>%` you see above is called a pipe, and it allows us to pass through a series of instructions in sequence (as if they were connected by pipes). Here, then, we first load the variable `raven` and *then* unnest its 5 grams and *then* count and sort those five grams.
+
+We can even plot this kind of data to see visually, as in the code below which plots which trigrams are most frequent in the data:
+
+```{r}
+
+raven %>%
+  unnest_tokens(word,text,token="ngrams",n=3) %>%
+  group_by(word) %>% 
+  filter(n()>3) %>%
+  ggplot() + 
+  geom_bar(fill="red") + 
+  aes(x=word) + 
+  coord_flip()
+
+```
+
+Rather than tallying them up, however, let's just figure out what all the five grams on this page are. We're going to create a new variable so we can investigate more closely.
+
+```{r}
+
+ravenGrams <- as_data_frame(raven %>%
+  unnest_tokens(word,text,token="ngrams",n=5) %>%
+  count(word,sort=T))
+
+View(ravenGrams)
+
+```
+
+You can see that when building an index of ngrams, each possible sequence of five words is recorded, as if a lens with a five words long aperture is sliding along the text, taking a snapshot at each position. 
+
+This is a slighly more complex dataset than `raven`, so let's try a few other functions directly in the console. These are basic functions for getting basic information about a variable. Type each of these with the correct variable in the parentheses (`ravenGrams`) and think about what these are telling you:`names()`, `str()`, `dim()`, `class()`, `head()`, `tail()`. If you don't know what a particular function does, use help to get an explanation.
+
+Hint: help syntax: help(str)
+
+## Comparisons
+
+We've seen some (relatively) interesting things that can be done with a single page, but what we really want to do is compare across pages. We can't compare across hundreds of thousands of pages as the [Viral Texts Project](http://viraltexts.org) does, but we can compare two pages. So let's load in the data for two distinct pages, the first the same *Lewisburg Chronicle* page from above, and the second from the *Vermont Phoenix* from February 28, 1845. 
+
+```{r}
+
+newspaperPages <- data_frame(
+  text = c(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"),text=read_file("http://chroniclingamerica.loc.gov/lccn/sn98060050/1845-02-28/ed-1/seq-1/ocr.txt")),
+  title = c("LewisburgChronicle","VermontPhoenix"))
+
+```
+
+Let's look at all the five-grams on both the pages we've loaded now. You should see a dataframe (a spreadsheet, essentially) with two columns: the first with the newspaper names and the second with the five-grams for each listed. The five-grams are grouped and counted, so you can see how many times each is used in each paper. We only have two pages in our dataset, so *most* of them will only appear once, but there is some duplication even across so little text.
+
+Then run: 
+
+```{r}
+
+newspaperPages %>% 
+  unnest_tokens(word,text,token = "ngrams", n = 5) %>% # <- New
+  group_by(title, word) %>% 
+  summarize(count = n()) %>%
+  arrange(desc(count)) %>%
+  View()
+```
+
+We could also visualize this, plotting the five grams based on their occurence on one or both pages.
+
+```{r}
+
+newspaperPages %>%
+  unnest_tokens(word,text,token = "ngrams", n=5) %>%
+  group_by(title,word) %>% 
+  summarize(count=n()) %>% 
+  spread(title,count,fill=0) %>% 
+  # filter(LewisburgChronicle + VermontPhoenix > 2) %>% 
+  ggplot() +
+  aes(x=LewisburgChronicle,y=VermontPhoenix,label=word) + 
+  geom_point(alpha=.3) + 
+  geom_text(check_overlap = TRUE) +
+#  scale_x_log10() +
+#  scale_y_log10() +
+  geom_abline(color = "red")
+
+```
+
+We can also manipulate the way the dataframe itself looks. By "spreading" the data into two columns, we can more easily see which ngrams appear on both pages.
+
+```{r}
+newspaperPages %>%
+  unnest_tokens(word,text,token = "ngrams", n=5) %>%
+  group_by(title,word) %>% 
+  summarize(count=n()) %>% 
+  spread(title,count,fill=0) %>%
+  # filter(LewisburgChronicle >= 1 & VermontPhoenix >= 1) %>%
+  View()
+```
+
+Now let's just look at the five grams that appear on both pages. To do that, you just need to "uncomment" line 271 by deleting the hashtag at the front of the line. Then rerun the code.
+
+Thus far we've mostly been using commands to look at the data in various ways, but we haven't been saving those views. If we wanted to, however, we could put some of our results — such as a dataframe of matching five grams between pages — into a new variable, which we could them perform new operations on. Like so:
+
+```{r}
+sharedFiveGrams <- newspaperPages %>%
+  unnest_tokens(word,text,token = "ngrams", n=5) %>%
+  group_by(title,word) %>% 
+  summarize(count=n()) %>% 
+  spread(title,count,fill=0) %>%
+  filter(LewisburgChronicle >= 1 & VermontPhoenix >= 1) %>%
+  rename(fivegram = word)
+sharedFiveGrams$sharedSum = sharedFiveGrams$LewisburgChronicle + sharedFiveGrams$VermontPhoenix
+sharedFiveGrams <- arrange(sharedFiveGrams, desc(sharedSum))
+```
+
+That didn't make anything happen immediately in this source window, but if you look at your "environment" pane you'll see a new variable called sharedFiveGrams. You can click the little table icon next to it to look at this data, which should resemble what we saw before. The only difference is that this dataframe is now saved in our computing environment, and we could now perform additional operations using that data specifically. Let's make a bar chart, just because.
+
+```{r}
+
+sharedFiveGrams %>%
+  filter(sharedSum > 2) %>%
+  ggplot() +
+  geom_bar(stat="identity") +
+  aes(x=fivegram,y=sharedSum) +
+  labs(title = "Shared Five Grams Between Newspaper Issues", y = "Total Number Shared", x = "Five Grams Shared")
+
+```
+# Exercises
+
+1. Create a new RMD file and work through Taylor Arnold and Lauren Tilton's ["Basic Text Processing in R"](https://programminghistorian.org/en/lessons/basic-text-processing-in-r#analyzing-every-state-of-the-union-address-from-1790-to-2016) tutorial. To create this new file, simply go up to File --> New File in RStudio and choose "R Markdown." You can format this RMD file however you want, but make sure to pay attention to the basic features of RMD files that you see here: 
+
+* A YAML header (look at the very top of this tutorial; how does the file begin? RStudio should auto-create and fill this for you, depending on what you choose to call your new file. Also, no need to know what YAML is, necessarily, but here's a link if you're interested: ["Getting Started with R Markdown"](https://ourcodingclub.github.io/2016/11/24/rmarkdown-1.html), look under "The YAML Header" subsection)
+* (Minimal) Markdown editing and syntax
+* Executable code chunks, which you create by typing in three backticks followed immediately by the R code symbol, `{r}`, and which you close off again with another three backticks, like so:
+
+```{r}
+# this is a code block
+```
+
+Notice that there is no space between the first three backticks and the R code symbol.
+
+When you open up a new RMD file, you'll see that it loads from a template with some pre-given information about RMD files. You can delete this if you want.
+
+Copy the code from the tutorial as necessary into your RMD file and run it. Below each code chunk, try to explain very briefly in prose what you think is happening in each step. As best as possible, make sure you understand what each of the steps is doing to the data it uses. Keep in mind that you should understand the *transformation* well, though you might be less clear about the precise means by which that transformation was effected. Again, we are after conceptual literacy here, not technical fluency.
+
+Send the completed, rendered HTML versions of your tutorial and the new RMD file you created to me by class on Monday, February 18.

@@ -1,0 +1,32 @@
+---
+title: "Tutorial 3 Answers"
+author: "Ryan Cordell, Jonathan Fitzgerald, Lindsay Thomas"
+date: "3/4/2019"
+output: html_document
+---
+# Answers From Tutorial
+
+```{r}
+# inspect the top rows, or should we say the *head*, of the wordcounts data frame 
+head(wordcounts)
+
+```
+
+
+# Exercises
+
+1. Above, we created a concordance for the single text. Can you create a concordance for the entire set of texts from the Wright corpus? BONUS: You'll probably notice that your new data frame's columns seem a bit out of order, can you rearrange them so that they are: filename, word, word2, word3? (Hint: Check out the `select()` function in the `dplyr` package.)
+
+```{r}
+allWRIGHTwords %>% mutate(word2 = lead(word,1)) %>% head
+multiColumn2 <- allWRIGHTwords %>% mutate(word2 = lead(word,1),word3=lead(word,2),word4=lead(word,3)) %>% select(filename, word, word2, word3, word4)
+
+```
+
+Alternatively, you can rearrange the columns like this:
+
+```{r}
+
+multiColumn2 = allWRIGHTwords[,c("filename","word","word2","word3")]
+
+```

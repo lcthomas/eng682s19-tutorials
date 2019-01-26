@@ -1,0 +1,84 @@
+---
+title: "Tutorial 2 Answers"
+author: "Ryan Cordell, Lindsay Thomas"
+date: "2/25/2019"
+output: html_document
+---
+# Answers From Tutorial
+
+```{r}
+# print the first lines of the census dataframe
+
+head(census)
+
+# print the last lines of the census dataframe
+
+tail(census)
+
+# print the first or last lines of one specific column in the census dataframe
+
+head(census$TotalPopulation)
+
+```
+
+
+```{r}
+# import the same census data, using a new variable
+
+census2 <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+
+# select 3-4 columns of interest
+
+census2 <- dplyr::select(census2, QualifyingAreaName, TotalPopulation, Male, Female)
+
+# filter the data frame by a value in one of those columns
+
+census_highpop <- filter(census2, TotalPopulation >= 2000)
+```
+
+
+# Exercises
+
+1. Create a new column that shows the ratio of `FreeColoredPopulation` to `SlavePopulation` in each county. You may need to repeat some of the import steps above, and you can use a new variable if you wish. 
+
+```{r}
+# write your code here
+census_pop <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+census_pop <- dplyr::rename(census_pop, county = QualifyingAreaName)
+census_pop <- separate(census_pop, county, into = c("county", "state"), sep = "\\, ")
+census_pop <- select(census_pop, county, state, FreeColoredPopulation, SlavePopulation)
+census_pop <- group_by(census_pop, county)
+census_pop <- mutate(census_pop, ratio = (FreeColoredPopulation/SlavePopulation)*100)
+```
+
+2. Create a "long" dataframe with columns for "publication_type" (e.g. "Newspaper") and "count". 
+
+```{r}
+census <- read.csv(file="/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")[ , c("QualifyingAreaName", "Newspapers", "Newspapers_Daily", "Newspapers_Weekly", "Newspapers_SemiTriWeekly", "Periodicals", "PrintingOffices")]
+census <- rename(census, county = QualifyingAreaName)
+census_long <- gather(census, "publication_type", "count", 2:7)
+census_long <- separate(census_long, county, into = c("county", "state"), sep = "\\, ")
+census_long <- na.omit(census_long)
+```
+
+3. Determine the state (not the county!) with the highest population of literate whites over 20 years old, then determine the state with the highest ratio of literate whites to general population.
+
+```{r}
+census <- read_csv(file="/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+census <- rename(census, county = QualifyingAreaName)
+census <- separate(census, county, into = c("county", "state"), sep = "\\, ")
+census <- group_by(census, state)
+literate <- summarize(census, totalLit = sum(LiterateWhiteAge20andOver))
+literate <- arrange(literate, desc(totalLit))
+
+```
+
+```{r}
+census <- read_csv(file="/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+census <- rename(census, county = QualifyingAreaName)
+census <- separate(census, county, into = c("county", "state"), sep = "\\, ")
+census <- group_by(census, state)
+literate <- summarize(census, totalLit = sum(LiterateWhiteAge20andOver) / sum(TotalPopulation))
+literate <- arrange(literate, desc(totalLit))
+
+```
