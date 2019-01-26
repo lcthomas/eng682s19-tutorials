@@ -94,7 +94,7 @@ At any given time, R refers to a particular "working directory" on your hard dri
 getwd()
 ```
 
-If the working directory is not what you want, you can set it in two ways: through the menus for Session --> Set Working Directory or through the command below. The path to the directory you want should go inside the quotation marks.
+If the working directory is not what you want, you can set it in two ways: through the menus for Session --> Set Working Directory or through the command below. The path to the directory you want should go inside the quotation marks (uncomment to run).
 
 ```{r}
 setwd("")
@@ -220,7 +220,7 @@ First let's once again reload the data in a slightly different format:
 
 ```{r}
 
-raven <- tibble(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt")) # a tibble is special kind of dataframe we'll learn more about next week
+raven <- tibble(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt")) 
 
 ```
 
@@ -307,7 +307,7 @@ ravenGrams <- as_data_frame(raven %>%
   unnest_tokens(word,text,token="ngrams",n=5) %>%
   count(word,sort=T))
 
-View(ravenGrams)
+# View(ravenGrams)
 
 ```
 
@@ -339,8 +339,9 @@ newspaperPages %>%
   unnest_tokens(word,text,token = "ngrams", n = 5) %>% # <- New
   group_by(title, word) %>% 
   summarize(count = n()) %>%
-  arrange(desc(count)) %>%
-  View()
+  arrange(desc(count)) 
+
+# View(newspaperPages)
 ```
 
 We could also visualize this, plotting the five grams based on their occurence on one or both pages.
@@ -371,11 +372,10 @@ newspaperPages %>%
   group_by(title,word) %>% 
   summarize(count=n()) %>% 
   spread(title,count,fill=0) %>%
-  # filter(LewisburgChronicle >= 1 & VermontPhoenix >= 1) %>%
-  View()
+  filter(LewisburgChronicle >= 1 & VermontPhoenix >= 1) 
 ```
 
-Now let's just look at the five grams that appear on both pages. To do that, you just need to "uncomment" line 271 by deleting the hashtag at the front of the line. Then rerun the code.
+Now let's just look at the five grams that appear on both pages. To do that, you just need to "uncomment" line 375 by deleting the hashtag at the front of the line, as well as the hashtag before the pipe operator on line 374. Then rerun the code.
 
 Thus far we've mostly been using commands to look at the data in various ways, but we haven't been saving those views. If we wanted to, however, we could put some of our results — such as a dataframe of matching five grams between pages — into a new variable, which we could them perform new operations on. Like so:
 
@@ -403,6 +403,7 @@ sharedFiveGrams %>%
   labs(title = "Shared Five Grams Between Newspaper Issues", y = "Total Number Shared", x = "Five Grams Shared")
 
 ```
+
 # Exercises
 
 1. Create a new RMD file and work through Taylor Arnold and Lauren Tilton's ["Basic Text Processing in R"](https://programminghistorian.org/en/lessons/basic-text-processing-in-r#analyzing-every-state-of-the-union-address-from-1790-to-2016) tutorial. To create this new file, simply go up to File --> New File in RStudio and choose "R Markdown." You can format this RMD file however you want, but make sure to pay attention to the basic features of RMD files that you see here: 
@@ -422,3 +423,11 @@ When you open up a new RMD file, you'll see that it loads from a template with s
 Copy the code from the tutorial as necessary into your RMD file and run it. Below each code chunk, try to explain very briefly in prose what you think is happening in each step. As best as possible, make sure you understand what each of the steps is doing to the data it uses. Keep in mind that you should understand the *transformation* well, though you might be less clear about the precise means by which that transformation was effected. Again, we are after conceptual literacy here, not technical fluency.
 
 Send the completed, rendered HTML versions of your tutorial and the new RMD file you created to me by class on Monday, February 18.
+
+## Posible Rendering Errors
+
+When you try to render this document to send it to me as an HTML file, you may encounter these errors (visible in your R Markdown pane):
+
+* `Error in setwd("") : cannot change working directory`: If there isn't anything in the quotes in `setwd("")`, then that is your problem. The program can't set your working directory because there's nothing there.
+* If you are seeing an error about XQuartz: This can happen if you have a Mac. The easiest fix is to comment out any `View()` functions in any code blocks and try rendering again.
+* If you see an error about not being able to install packages: Comment out any lines in code blocks where you install packages and try again.

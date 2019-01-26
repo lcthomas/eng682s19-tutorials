@@ -329,3 +329,11 @@ Note: I've included an RMD file with the answers to these exercises in the repo 
 ```
 
 Send the completed, rendered HTML version of your tutorial to me by class on Monday, February 25.
+
+## Posible Rendering Errors
+
+When you try to render this document to send it to me as an HTML file, you may encounter these errors (visible in your R Markdown pane):
+
+* `Error in setwd("") : cannot change working directory`: If there isn't anything in the quotes in `setwd("")`, then that is your problem. The program can't set your working directory because there's nothing there.
+* If you are seeing an error about XQuartz: This can happen if you have a Mac. The easiest fix is to comment out any `View()` functions in any code blocks and try rendering again.
+* If you see an error about not being able to install packages: Comment out any lines in code blocks where you install packages and try again.

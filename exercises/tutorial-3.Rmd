@@ -354,6 +354,7 @@ Your goal for this exercise is to try to follow along with what I've done and ex
 You're welcome to explore the script further, and I've given you all of the social network data that I used in your `data` folder (I analyzed six different novels in all), so feel free to use it if you want. But for this tutorial, just work with the `Brief_History` data and only focus on lines 1-71.
 
 ### The Functions:
+
 For each function I've listed below, write, in your own words, a brief explanation of that function, what package it comes from (if it comes from a specific package; some of the functions below are base R functions), and how I use it in the script.
 
 `read.csv()`:
@@ -373,3 +374,11 @@ For each function I've listed below, write, in your own words, a brief explanati
 `barchart`:
 
 Send the completed, rendered HTML version of your tutorial to me by class on Monday, March 4.
+
+## Posible Rendering Errors
+
+When you try to render this document to send it to me as an HTML file, you may encounter these errors (visible in your R Markdown pane):
+
+* `Error in setwd("") : cannot change working directory`: If there isn't anything in the quotes in `setwd("")`, then that is your problem. The program can't set your working directory because there's nothing there.
+* If you are seeing an error about XQuartz: This can happen if you have a Mac. The easiest fix is to comment out any `View()` functions in any code blocks and try rendering again.
+* If you see an error about not being able to install packages: Comment out any lines in code blocks where you install packages and try again.
