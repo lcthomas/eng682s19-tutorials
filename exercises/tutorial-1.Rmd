@@ -66,7 +66,7 @@ I'm asking you to compose in R Markdown for the three tutorials we will be doing
 In brief, here's what you need to know:
 
 * Headings: `#`. Hastags designate headings in a hierarchical structure. The more hashtags, the farther down the hierarchy that heading is. Examples: `# Heading 1`, `## Heading 2`, `### Heading 3`, etc. Heading numbers correspond to the size of the heading. The more hastags, the smaller the heading. In this document, the heading "To go over in class on Monday, Feb 11," is an H1 heading (set off with one hashtag). The sub-headings under that, including "Notes Before We Begin" and "R and RStudio," are H2 headings (set off with two hashtags). Look at the HTML version of this tutorial to compare their respective sizes.
-* Links. Here's how you format a link in Markdown: [text you want to be linked](http://WhateverTheLinkIs) --> [our course site](http://lindsaythomas.net/eng682s19). Again, check the HTML version of the tutorial to see this in action.
+* Links. Here's how you format a link in Markdown: [text you want to be linked](WhateverTheLinkIs) --> [our course site](http://lindsaythomas.net/eng682s19). Again, check the HTML version of the tutorial to see this in action.
 * Bold: To make a word or phrase bold, place two asterisks around it. Ex: `**this is bolded**` --> **this is bolded**. See it in action in the HTML version of the tutorial.
 * Italics: To italicize a word or phrase, place one asterisk around it. Ex: `*this is in italics*` --> *this is in italics*. See it in action in the HTML version of the tutorial.
 
