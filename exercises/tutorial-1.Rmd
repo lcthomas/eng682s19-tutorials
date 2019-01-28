@@ -39,8 +39,6 @@ This tutorial, however, is not written as a "regular" R script; it is an [R Mark
 
 R Markdown blends markdown conventions with a few customizations that let you embed snippets of code, as well as any outputs (e.g. graphs, maps) produced by that code into Markdown documents. This lets you weave together prose and code, so your readers can see the technical aspects of your work while reading about their interpretive significance. You can *render* R Markdown documents in a variety of ways: as HTML files, as PDFs, as Word documents, etc (you do this by clicking the `Knit` button above and choosing your output from the dropdown menu). You can view the HTML version of this tutorial on our course website (go to the "Schedule" page and find the link under Feb 11). Looking at this tutorial as an HTML file allows you to see how the Markdown syntax translates for presentation on the web. `.R` scripts don't render in this way, and so they don't blend code and prose *as easily.*
 
-## R Markdown
-
 RMD files also have other advantages over R files. As an RMD file, this is more than a flat text document: it's a program that you can run in R. R Markdown allows you to embed executable code into your writing. If you click the green 'run' arrow in the gray box below (if you mouse over it, the label "Run 
 Current Chunk" will appear), the code will run. You should see the results in your console window. Try that now.
 
