@@ -422,7 +422,7 @@ Copy the code from the tutorial as necessary into your RMD file and run it. Belo
 
 Send the completed, rendered HTML versions of your tutorial and the new RMD file you created to me by class on Monday, February 18.
 
-## Posible Rendering Errors
+## Possible Rendering Errors
 
 When you try to render this document to send it to me as an HTML file, you may encounter these errors (visible in your R Markdown pane):
 
