@@ -22,6 +22,8 @@ library(tidyverse)
 library(dplyr)
 library(tidytext)
 library(wordcloud)
+library(readr)
+library(ggplot2)
 
 # To go over in class on Monday, Feb 11
 
@@ -86,7 +88,7 @@ You can comment your R code blocks to provide additional instructions to the rea
 2 + 2
 ```
 
-The writing that appears in green in the code block (next to the hashtag) will not execute. The hashtag symbol tells the computer this is a comment, or writing for humans. If you are writing comments in your code blocks, you must make sure that EACH LINE is "commented out," or that it begins with a `#` symbol, otherwise the computer will think it's code (A note on lines of code: See the line numbers in the left margin here [i.e., line 80 is commented out]? These designate new lines. Sometimes a "line" of code can run over what looks on the screen like multiple lines of code because of automatic text wrapping in RStudio [i.e., line 81]. However, unless you create a new line by hitting the return button, the computer will recognize this as just one line. Check out the line numbers again: how many lines of code does the comment on line 81 take up?). In a regular R script (not RMD), the comments are often the only place you'll find explanatory prose, so keep an eye out for them. 
+The writing that appears in green in the code block (next to the hashtag) will not execute. The hashtag symbol tells the computer this is a comment, or writing for humans. If you are writing comments in your code blocks, you must make sure that EACH LINE is "commented out," or that it begins with a `#` symbol, otherwise the computer will think it's code (A note on lines of code: See the line numbers in the left margin here [i.e., line 86 is commented out]? These designate new lines. Sometimes a "line" of code can run over what looks on the screen like multiple lines of code because of automatic text wrapping in RStudio [i.e., line 87]. However, unless you create a new line by hitting the return button, the computer will recognize this as just one line. Check out the line numbers again: how many lines of code does the comment on line 87 take up?). In a regular R script (not RMD), the comments are often the only place you'll find explanatory prose, so keep an eye out for them. 
 
 ## Navigating Files in R and Setting Your Working Directory
 
@@ -152,13 +154,20 @@ In the box below, write six lines of code to install and then load the packages 
 
 # install wordcloud
 
+# install ggplot2
+
 library(dplyr)
 library(tidytext)
 library(wordcloud)
+library(ggplot2)
 
 ```
 
-A note about installing and loading packages: In general, you only need to install a package once onto a particular machine. However, each time you start a new R session, you will need to reload the packages you want to use.
+A note about installing and loading packages: In general, you only need to install a package once onto a particular machine. However, each time you start a new R session, you will need to reload the packages you want to use. To see if a specific package has been loaded, use the "Packages" tab in the "Files, Plots, Packages, Help, Viewer" pane of RStudio. Under "Packages," you can see a list of all of the R packages currently installed on your system. If a package has been loaded this R session, a check will appear next to it.
+
+You can also use the ""Files, Plots, Packages, Help, Viewer" pane of RStudio to install packages. To do this, navigate to the "Packages" tab, and click "Install." A dialog box will appear where you can search for the specific package you want to load, then click "Install." This is how I usually install packages.
+
+**WINDOWS USERS**: In the coding work session on Tuesday, Feb 12, some Windows users experienced difficulities with installing and loading packages. Apparently, on Windows computers, some package interference happens. To remedy this, if you get an error that reads `Unable to load package x`, go into your "Packages" tab, and make sure that package is checked off. Sometimes you can load a package before running one line of code, then run that line of code, and then the package becomes unchecked (this is called package interference). It's very annoying, but the remedy is simply to keep loading it.
 
 ## Getting Help with Functions
 
@@ -185,7 +194,7 @@ Ok, this little bit of code below is going to go onto the web and read the text 
 
 ```{r}
 
-raven <- data_frame(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"))
+raven <- data.frame(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"))
 
 ```
 
@@ -195,7 +204,7 @@ First, what is that word `raven` in the code above? It's a variable, which means
 
 ```{r}
 
-raven = data_frame(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"))
+raven = data.frame(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"))
 
 ```
 
@@ -238,7 +247,7 @@ With the computer we can very easily start counting, for instance counting vario
 ```{r}
 
 raven %>% 
-  unnest_tokens(word,text) %>%
+  tidytext::unnest_tokens(word,text) %>%
   count(word,sort=T)
 
 ```
@@ -248,7 +257,7 @@ Which we can visualize in wordclouds, such as those you may have seen on a websi
 ```{r}
 
 raven %>% 
-  unnest_tokens(word,text) %>%
+  tidytext::unnest_tokens(word,text) %>%
   count(word,sort=T) %>% 
   with(wordcloud(word,n,max.words = 100))
 
@@ -270,7 +279,7 @@ Again, someone has done the work for you already. There's data included in our t
 data("stop_words") # <- Load the stop words data
 
 raven %>% 
-  unnest_tokens(word,text) %>%
+  tidytext::unnest_tokens(word,text) %>%
   count(word,sort=T) %>% 
   anti_join(stop_words) %>% #This is the only change to our word cloud visualization from up above. This removes stop words from the text of "The Raven."
   with(wordcloud(word,n))
@@ -282,7 +291,7 @@ In addition to words, R makes it very easy to count (and compare, etc.) other un
 ```{r}
 
 raven %>%
-  unnest_tokens(word,text,token="ngrams",n=5) %>%
+  tidytext::unnest_tokens(word,text,token="ngrams",n=5) %>%
   count(word,sort=T)
 
 ```
@@ -294,7 +303,7 @@ We can even plot this kind of data to see visually, as in the code below which p
 ```{r}
 
 raven %>%
-  unnest_tokens(word,text,token="ngrams",n=3) %>%
+  tidytext::unnest_tokens(word,text,token="ngrams",n=3) %>%
   group_by(word) %>% 
   filter(n()>3) %>%
   ggplot() + 
@@ -308,8 +317,8 @@ Rather than tallying them up, however, let's just figure out what all the five g
 
 ```{r}
 
-ravenGrams <- as_data_frame(raven %>%
-  unnest_tokens(word,text,token="ngrams",n=5) %>%
+ravenGrams <- as_data_frame(raven %>% # may have to use as_tibble() here instead of as_data_frame()
+  tidytext::unnest_tokens(word,text,token="ngrams",n=5) %>%
   count(word,sort=T))
 
 # View(ravenGrams)
@@ -328,7 +337,7 @@ We've seen some (relatively) interesting things that can be done with a single p
 
 ```{r}
 
-newspaperPages <- data_frame(
+newspaperPages <- data.frame(
   text = c(text=read_file("http://chroniclingamerica.loc.gov/lccn/sn85055199/1849-11-28/ed-1/seq-1/ocr.txt"),text=read_file("http://chroniclingamerica.loc.gov/lccn/sn98060050/1845-02-28/ed-1/seq-1/ocr.txt")),
   title = c("LewisburgChronicle","VermontPhoenix"))
 
@@ -341,7 +350,7 @@ Then run:
 ```{r}
 
 newspaperPages %>% 
-  unnest_tokens(word,text,token = "ngrams", n = 5) %>% # <- New
+  tidytext::unnest_tokens(word,text,token = "ngrams", n = 5) %>% # <- New
   group_by(title, word) %>% 
   summarize(count = n()) %>%
   arrange(desc(count)) 
@@ -354,10 +363,10 @@ We could also visualize this, plotting the five grams based on their occurence o
 ```{r}
 
 newspaperPages %>%
-  unnest_tokens(word,text,token = "ngrams", n=5) %>%
+  tidytext::unnest_tokens(word,text,token = "ngrams", n=5) %>%
   group_by(title,word) %>% 
   summarize(count=n()) %>% 
-  spread(title,count,fill=0) %>% 
+  tidyr::spread(title,count,fill=0) %>% 
   # filter(LewisburgChronicle + VermontPhoenix > 2) %>% 
   ggplot() +
   aes(x=LewisburgChronicle,y=VermontPhoenix,label=word) + 
@@ -373,23 +382,21 @@ We can also manipulate the way the data frame itself looks. By "spreading" the d
 
 ```{r}
 newspaperPages %>%
-  unnest_tokens(word,text,token = "ngrams", n=5) %>%
+  tidytext::unnest_tokens(word,text,token = "ngrams", n=5) %>%
   group_by(title,word) %>% 
   summarize(count=n()) %>% 
-  spread(title,count,fill=0) %>%
+  tidyr::spread(title,count,fill=0) %>%
   filter(LewisburgChronicle >= 1 & VermontPhoenix >= 1) 
 ```
-
-Now let's just look at the five grams that appear on both pages. To do that, you just need to "uncomment" line 375 by deleting the hashtag at the front of the line, as well as the hashtag before the pipe operator on line 374. Then rerun the code.
 
 Thus far we've mostly been using commands to look at the data in various ways, but we haven't been saving those views. If we wanted to, however, we could put some of our results — such as a data frame of matching five grams between pages — into a new variable, which we could them perform new operations on. Like so:
 
 ```{r}
 sharedFiveGrams <- newspaperPages %>%
-  unnest_tokens(word,text,token = "ngrams", n=5) %>%
+  tidytext::unnest_tokens(word,text,token = "ngrams", n=5) %>%
   group_by(title,word) %>% 
   summarize(count=n()) %>% 
-  spread(title,count,fill=0) %>%
+  tidyr::spread(title,count,fill=0) %>%
   filter(LewisburgChronicle >= 1 & VermontPhoenix >= 1) %>%
   rename(fivegram = word)
 sharedFiveGrams$sharedSum = sharedFiveGrams$LewisburgChronicle + sharedFiveGrams$VermontPhoenix
@@ -411,7 +418,7 @@ sharedFiveGrams %>%
 
 # Exercises
 
-1. Create a new RMD file and work through Taylor Arnold and Lauren Tilton's ["Basic Text Processing in R"](https://programminghistorian.org/en/lessons/basic-text-processing-in-r#analyzing-every-state-of-the-union-address-from-1790-to-2016) tutorial. To create this new file, simply go up to File --> New File in RStudio and choose "R Markdown." You can format this RMD file however you want, but make sure to pay attention to the basic features of RMD files that you see here: 
+1. Create a new RMD file and work through Taylor Arnold and Lauren Tilton's ["Basic Text Processing in R"](https://programminghistorian.org/en/lessons/basic-text-processing-in-r) tutorial. Copy and paste the code they give you in the tutorial into your new RMD file (i.e., when they say to "run things in the console," copy and paste that code into your RMD file itself (in a code block if you like), and run it. To create this new file, simply go up to File --> New File in RStudio and choose "R Markdown." You can format this RMD file however you want, but make sure to pay attention to the basic features of RMD files that you see here: 
 
 * A YAML header (look at the very top of this tutorial; how does the file begin? RStudio should auto-create and fill this for you, depending on what you choose to call your new file. Also, no need to know what YAML is, necessarily, but here's a link if you're interested: ["Getting Started with R Markdown"](https://ourcodingclub.github.io/2016/11/24/rmarkdown-1.html), look under "The YAML Header" subsection)
 * (Minimal) Markdown editing and syntax
@@ -421,11 +428,11 @@ sharedFiveGrams %>%
 # this is a code block
 ```
 
-Notice that there is no space between the first three backticks and the R code symbol.
+Notice that there is no space between the first three backticks and the R code symbol. Notice also that you MUST put empty lines BEFORE AND AFTER code blocks.
 
-When you open up a new RMD file, you'll see that it loads from a template with some pre-given information about RMD files. You can delete this if you want.
+When you open up a new RMD file, you'll see that it loads from a template with some pre-given information about RMD files. You can delete this if you want (anything UNDER the YAML header, that is -- see above).
 
-Copy the code from the tutorial as necessary into your RMD file and run it. Below each code chunk, try to explain very briefly in prose what you think is happening in each step. As best as possible, make sure you understand what each of the steps is doing to the data it uses. Keep in mind that you should understand the *transformation* well, though you might be less clear about the precise means by which that transformation was effected. Again, we are after conceptual literacy here, not technical fluency.
+Copy the code from the tutorial as necessary into your RMD file and run it (copy the code directly into the RMD file -- when they say "run the code in the console, copy and paste it into the RMD file itself, as a code block, or not. Below each code chunk, try to explain very briefly in prose what you think is happening in each step. As best as possible, make sure you understand what each of the steps is doing to the data it uses. Keep in mind that you should understand the *transformation* well, though you might be less clear about the precise means by which that transformation was effected. Again, we are after conceptual literacy here, not technical fluency.
 
 Send the completed, rendered HTML versions of your tutorial and the new RMD file you created to me by class on Monday, February 18.
 
