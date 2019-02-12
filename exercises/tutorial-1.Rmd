@@ -4,6 +4,12 @@ author: "Ryan Cordell, Lindsay Thomas"
 date: "2/18/2019"
 output: html_document
 ---
+Run this code block!
+```{r}
+install.packages("rmarkdown")
+library(rmarkdown)
+```
+
 # Acknowledgements
 
 This tutorial is adapted from Ryan Cordell's "GrammaR.Rmd" and "DataFrames.Rmd" exercises from his Spring 2017 course, ["Humanities Data Analysis"](http://s17hda.ryancordell.org/), on which it draws heavily. See the original exercises in that course's Github repo: ["GrammaR.Rmd"](https://github.com/rccordell/s17hda/blob/master/exercises/GrammaR.Rmd); ["DataFrames.Rmd"](https://github.com/rccordell/s17hda/blob/master/exercises/DataFrames.Rmd).
@@ -139,6 +145,7 @@ In the box below, write six lines of code to install and then load the packages 
 ```{r}
 
 # write your code to install the packages below:
+
 # install dplyr
 
 # install tidytext
