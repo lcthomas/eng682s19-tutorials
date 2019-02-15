@@ -29,8 +29,8 @@ This tutorial picks up the pace considerably. A lot is going to happen quickly, 
 Last week we explictly invoked each function in a new line of code. Today we'll introduce the pipe operator `%>%`, which allows us to chain together a series of transformations. Let's illustrate this with a few familiar blocks from last week (remember to change the filepath in the `read.csv` functions below to the correct filepath on your machine):
 
 ```{r}
-census <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
-census <- select(census, 1,6:81)
+census <- read.csv(file = "~/Dropbox/github/websites/teaching/eng682s19-tutorials/data/1840-census-data.csv")
+census <- dplyr::select(census, 1,6:81)
 census <- dplyr::rename(census, county = QualifyingAreaName)
 census_long <- gather(census, "identification", "count", 2:77)
 census_long <- separate(census_long, county, into = c("county", "state"), sep = "\\, ")
@@ -41,7 +41,7 @@ Using pipes, we can chain together these operations like so, to create two varia
 
 ```{r}
 census <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv") %>%
-  select(1,6:81) %>%
+  dplyr::select(1,6:81) %>%
   dplyr::rename(county = QualifyingAreaName)
 
 census_long <- census %>%
@@ -53,8 +53,8 @@ census_long <- census %>%
 Or like so, to create only one `census_long` variable (note that you'll have to clear your `Global Environment` before running this code to see it actually work. Do that by clicking on the broom icon in the Environment pane.)
 
 ```{r}
-census_long <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv") %>%
-  select(1,6:81) %>%
+census_long <- read.csv(file = "~/Dropbox/github/websites/teaching/eng682s19-tutorials/data/1840-census-data.csv") %>%
+  dplyr::select(1,6:81) %>%
   dplyr::rename(county = QualifyingAreaName) %>%
   gather("identification", "count", 2:77) %>%
   separate(county, into = c("county", "state"), sep = "\\, ") %>%
@@ -143,7 +143,7 @@ If you look at that data frame, you'll notice that each word appears in its own 
 
 ```{r}
 
-wrightWords <- wrightWords %>% filter(word != "")
+wrightWords <- wrightWords %>% dplyr::filter(word != "")
 
 ```
 
@@ -155,7 +155,7 @@ Okay, now that we have this in a data frame with all the words and no blank spac
 
 ```{r}
 
-wordcounts <- wrightWords %>% group_by(word) %>% dplyr::summarize(count=n()) %>% dplyr::arrange(-count)
+wordcounts <- wrightWords %>% dplyr::group_by(word) %>% dplyr::summarize(count=n()) %>% dplyr::arrange(-count)
 
 ```
 
@@ -241,7 +241,7 @@ Working with a single text is fun, but the real magic happens when you have a se
 
 ```{r}
 
-WRIGHT <- list.files("/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/wright-txt/",full.names = TRUE)
+WRIGHT <- list.files("~/Dropbox/github/websites/teaching/eng682s19-tutorials/data/wright-txt/",full.names = TRUE)
 
 ```
 
@@ -298,7 +298,7 @@ readWRIGHTwords <- function(file) {
   words = text %>% 
     strsplit("[^A-Za-z]") %>% 
     unlist 
-  WRIGHT = data.frame(word=words,filename=gsub("/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/wright-txt/","",file),stringsAsFactors = FALSE) %>% filter(word != "")
+  WRIGHT = data.frame(word=words,filename=gsub("~/Dropbox/github/websites/teaching/eng682s19-tutorials/data/wright-txt/","",file),stringsAsFactors = FALSE) %>% filter(word != "")
   return(WRIGHT)
 }
 

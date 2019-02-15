@@ -107,7 +107,7 @@ If you have a file previously saved in the csv (comma-separated-value) format, i
 In the example below, you see the absolute path to the data on my computer. You'll need to modify the path in the quotation marks to navigate the folder in your file system to where you have stored the data files for this class. Copy and paste it from above, making sure to add on the specific filename for the 1840 census data (`1840-census-data.csv`).
 
 ```{r}
-census <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-682/tutorials/data/1840-census-data.csv")
+census <- read.csv(file = "~/Dropbox/github/websites/teaching/eng682s19-tutorials/data/1840-census-data.csv")
 ```
 
 # Browsing Tabular Data
@@ -165,6 +165,14 @@ Note: if the above throws an error for you, try this version (if you want to kno
 
 ```{r}
 census <- dplyr::rename(census, county = QualifyingAreaName)
+```
+
+Another note: if the above 2 code blocks throw errors for you, try this version:
+
+```{r}
+install.packages("data.table")
+load(data.table)
+census <- data.table::setnames(census, old = "QualifyingAreaName", new = "county")
 ```
 
 How and why is this method of renaming columns different from the one introduced above (which looked like this: `colnames(df)[2] <- "newName"`)?  Write your answer below the `### A:` heading. Hint: Take a look at [this page](https://dplyr.tidyverse.org/reference/select.html) to learn more about the `rename` function, which is a part of the `dplyr` package. You can also find this info by searching for `rename` using RStudio's help feature, and scrolling down to `dplyr::select`.
