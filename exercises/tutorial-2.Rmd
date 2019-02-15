@@ -4,6 +4,10 @@ author: "Ryan Cordell, Lindsay Thomas"
 date: "2/25/2019"
 output: html_document
 ---
+# Note
+
+I've included an RMD file with the answers to coding problems posed in this tutorial in the repo you downloaded from Github (in the `exercise-answers` folder). Feel free to use it if you get stuck, but make sure you can explain what happens in each line.
+
 # Acknowledgements
 
 This tutorial is adapted from Ryan Cordell's "DataFrames.Rmd" exercise from his Spring 2017 course, ["Humanities Data Analysis"](http://s17hda.ryancordell.org/), on which it draws heavily. See the original exercise in that course's Github repo: ["DataFrames.Rmd"](https://github.com/rccordell/s17hda/blob/master/exercises/DataFrames.Rmd). It also draws on Chapter 2, "A Short Introduction to R," from Taylor Arnold and Lauren Tilton's book *Humanities Data in R: Exploring Networks, Geospatial Data, Images, and Text* (Springer, 2015).
@@ -34,9 +38,11 @@ Everything in R is an object. Here's an example:
 
 x <- 1 + 2
 
-Go ahead and run that line of code above. You have now created an object that has a value of 3 (if you look over in your Environment pane, you should now see `x` appear under `Values`). This object is stored in the variable `x`. Additionally, every object in R belongs to a *class* describing the type of object it is. You can check the class of any objec using the `class()` function, like so:
+Go ahead and run that line of code above. You have now created an object that has a value of 3 (if you look over in your Environment pane, you should now see `x` appear under `Values`). This object is stored in the variable `x`. Additionally, every object in R belongs to a *class* describing the type of object it is. You can check the class of any object using the `class()` function, like so:
 
 class(x)
+
+**A note about saving your environment**: You can save the objects you load into an R session so that when you start the session back up again, you won't have to reload everything. This is called saving your environment. Your environment is saved as an `.RData` file. You can save it to the exercises folder within the tutorials folder. This way, if you want to shut down RStudio on your computer, the next time you open it up again you can load your saved environment by clicking on the open folder icon in the Environment pane.
 
 When you run that code above, you will see that `x` belongs to the class `numeric`, meaning it is a numeric vector object. Other classes of objects in R include other kinds of vectors (there are 6 different kinds of vectors, including character vectors), lists, matrices, and data frames (Vectors? you might be thinking, Isn't that related to math? Yes -- important to note here that R has a long history as a tool for statistical analysis, and its data structures reflect this purpose.) Data types are important and sometimes frustrating in R; there are functions that can operate on strings (text data) but not other kinds. Right now, though, it's not so important that you learn about these different kinds of data, although if you are interested in learning more, you might want to read through chapter 2 from Arnold and Tilton's book *Humanities Data in R,* which I've included in the "Additional Reading" folder in our course Box folder. In this tutorial, we're going to focus on data frames.
 
@@ -48,7 +54,7 @@ df <- data.frame(a=1:5, b=21:25, c=1:5 +.5)
 class(df)
 ```
 
-Run the code above, then look over in your Environment pane under `Data`. You will now see the `df` object you just created. Go ahead and click on the spreadsheet-looking icon on the right (remember this does the same thing as the command in `View(df)`, check your console as you do his!). You are looking at the `df` data frame. Look at the `data.frame` function above: how does this function correspond to the data frame you are looking at (including the values that are in each cell)? Use `help(data.frame)` if you want a more formal explanation of how the function works. 
+Run the code above, then look over in your Environment pane under `Data`. You will now see the `df` object you just created. Go ahead and click on the spreadsheet-looking icon on the right (remember this does the same thing as the command in `View(df)`, check your console as you do this!). You are looking at the `df` data frame. Look at the `data.frame` function above: how does this function correspond to the data frame you are looking at (including the values that are in each cell)? Use `help(data.frame)` if you want a more formal explanation of how the function works. 
 
 Every data frame object in R has 3 attributes: the dimension of the data frame, the column names, and the row names. You can access these as follows:
 
