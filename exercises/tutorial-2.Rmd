@@ -296,7 +296,7 @@ What does each line of code above do? Write your answers below.
 Spread, as you might imagine, does just the opposite of gather. It takes long data and makes it wide. So we can run the following to reshape our `census_long` dataframe into something very like the wide dataframe with which we began.
 
 ```{r}
-census_wide <- spread(census_long, identification, count)
+census_wide <- tidyr::spread(census_long, identification, count)
 View(census_wide)
 ```
 
