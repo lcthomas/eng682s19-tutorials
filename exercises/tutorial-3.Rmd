@@ -4,6 +4,9 @@ author: "Ryan Cordell, Jonathan Fitzgerald, Lindsay Thomas"
 date: "3/4/2019"
 output: html_document
 ---
+# Note
+
+I've included an RMD file with the answers to coding problems posed in this tutorial in the repo you downloaded from Github (in the `exercise-answers` folder). Feel free to use it if you get stuck, but make sure you can explain what happens in each line.
 
 # Acknowledgements
 
@@ -58,7 +61,7 @@ census_long <- read.csv(file = "/Users/lxt308/Dropbox/Teaching/2019-spring/eng-6
   na.omit(census_long)
 ```
 
-Note that there are some distinct structural differences when using pipes. For one, the variable being transformed is usually invoked at the beginning of the chain, and thus does not appear as an argument in the separate parts of the chain. Compare these piped operations with the line-by-line operations above again. How do they compare? Where do you see `census` or `census_long` invoked in lines 25-30 when they are not in lines 49-54?  Write your answers below the heading.
+Note that there are some distinct structural differences when using pipes. For one, the variable being transformed is usually invoked at the beginning of the chain, and thus does not appear as an argument in the separate parts of the chain. Compare these piped operations with the line-by-line operations above again. How do they compare? Where do you see `census` or `census_long` invoked in lines 33-37 when they are not in lines 56-61?  Write your answers below the heading.
 
 ### A:
 
@@ -67,7 +70,7 @@ We can also use pipes to make (and view) temporary transformations in our data t
 
 ```{r}
 census_long %>% 
-  spread(identification, count) %>%
+  tidyr::spread(identification, count) %>%
   View()
 ```
 
@@ -166,7 +169,7 @@ Now, let's take a look at the top few rows of that data frame.
 
 ```
 
-You shouldn't be terribly surprised to find that the most common words are "the", "of", "and", "to, "in", "a", and so on. There are ways to filter out these most common words, which we briefly touched on in tutorial 1, but for now we'll let them stand. Now that we have these word counts, let's try something fun. Using the `ggplot2` package (included in `tidyverse`, so we don't need to load it if we've already loaded up `tidyverse`) we can plot the most common words. I'm not going to go into too much detail about what is going on here since it's not super important for our purposes, but let's run the following commands:
+You won't be terribly surprised to find that the most common words are "the", "of", "and", "to, "in", "a", and so on. There are ways to filter out these most common words, which we briefly touched on in tutorial 1, but for now we'll let them stand. Now that we have these word counts, let's try something fun. Using the `ggplot2` package (included in `tidyverse`, so we don't need to load it if we've already loaded up `tidyverse`) we can plot the most common words. I'm not going to go into too much detail about what is going on here since it's not super important for our purposes, but let's run the following commands:
 
 ```{r}
 
@@ -269,7 +272,7 @@ Another thing to note about the above function is that it doesn't refer to any s
 
 ## Running the Function
 
-In order to run the function, we do the following (and don't forget to enjoy the satisfactory feeling of watching the filenames scroll by in the console!): 
+In order to run the function, we do the following: 
 
 ```{r}
 
@@ -281,7 +284,7 @@ allWRIGHTtext <- data.frame(filename=WRIGHT,stringsAsFactors=FALSE) %>%
 
 Here we are creating a new data frame that uses the temporary data frame created by the function `WRIGHT` as its starting point, then it pulls together (`group_by(filename)`) all the texts by file name and runs the function (`do()`). The output will be a new data frame called `allWRIGHTtext` with two columns, "filename" and "text". 
 
-Now is as good a time as any to talk about code reuse. The above function was originally created by Ben Schmidt (History, Northeastern) for a graduate course he taught. Jonathan Fitzgerald, who wrote much of this tutorial, has since adapted and used it over and over again in the years since. Maybe this is obvious to you by now, but when writing code there's never a need to reinvent the wheel. Most likely, someone else has done what you want to do before.
+Now is as good a time as any to talk about code reuse. The above function was originally created by Ben Schmidt (History, Northeastern) for a graduate course he taught. Jonathan Fitzgerald, a student in that course and the person originally wrote much of this tutorial, has adapted and used it over and over again in the years since. Maybe this is obvious to you by now, but when writing code there's never a need to reinvent the wheel. Most likely, someone else has done what you want to do before.
 
 ## Modifying the Function to Tokenize
 
@@ -333,23 +336,17 @@ unique <- allWRIGHTwords %>%
 
 Here we are piping together a few functions: first, because we want to see the unique words regardless of their case (we want "The" and "the" to be the same word) we use `mutate()` to replace the column "word" with another column "word" in which all words are lowercase. That is what the function `tolower()` does for us. Then, we use another handy function `distinct()` to find unique (or distinct) rows. Finally, we group those distinct words together and filter to select just one. This last step is necessary because a word that is distinct to a text might appear more than once in that text, thus giving us an inaccurate count. 
 
-Go ahead and `View()` this object (`unique`). Something you're likely to notice off the bat is there are a lot of what look like nonsense or non-words in there, like `aad` and `addvunt`. These might be typos, or they might have to do with something specific from one or more of the texts (i.e., they are meaningful in that context). It's likely, however, that many of these are optical character recognition (OCR) errors. Meaning, if a text was scanned as a pdf and then submitted to an OCR program, sometimes the OCR program read words wrong and created nonsense or non-words. There are ways to filter these words out, but this is something to be aware of in any text analysis project, but especially one using data that has been submitted to OCR.
+Go ahead and `View()` this object (`unique`). Something you're likely to notice off the bat is there are a lot of what look like nonsense or non-words in there, like `aad` and `addvunt`. These might be typos, or tokenization errors, or they might have to do with something specific from one or more of the texts (i.e., they are meaningful in that context). It's likely, however, that many of these are optical character recognition (OCR) errors. Meaning, if a text was scanned as a pdf and then submitted to an OCR program, sometimes the OCR program read words wrong and created nonsense or non-words. There are ways to filter these words out, but this is something to be aware of in any text analysis project, but especially one using data that has been submitted to OCR.
 
 # Exercises
 
-1. Above, we created a concordance for a single text. Can you create a concordance for the entire set of texts from the Wright corpus? BONUS: You'll probably notice that your new data frame's columns seem a bit out of order, can you rearrange them so that they are: filename, word, word2, word3? (Hint: Check out the `select()` function in the `dplyr` package.)
+1. This last exercise is about reading (and trying to understand) someone else's code. In the `data` folder in our course repo (what you downloaded from Github, the same thing that contains these tutorials), you will find the R script we briefly looked at in tutorial 1 (NOT an RMD file) called `sci-lit-2018-class.R`. Open that script up in RStudio. You will also find a file called `Brief_History_socialnetwork_links.csv`. This is the file you will load when you run the script.
 
-```{r}
-# write your code here
-```
-
-2. This last exercise is about reading (and trying to understand) someone else's code. In the `data` folder in our course repo (what you downloaded from Github, the same thing that contains these tutorials), you will find the R script we briefly looked at in tutorial 1 (NOT an RMD file) called `sci-lit-2018-class.R`. Open that script up in RStudio. You will also find a file called `Brief_History_socialnetwork_links.csv`. This is the file you will load when you run the script.
-
-This script is something I (Lindsay) wrote to help me out with a project I was working on this summer. It uses a social network graph of the novel *A Brief History of Seven Killings* by Marlon James (2014) I produced using someone else's software (referred to as lit-cascades in the script), and performs some additional, very basic social network analysis of that graph. 
+This script is something I (Lindsay) wrote to help me out with a project I was working on this past summer. It uses a social network graph of the novel *A Brief History of Seven Killings* by Marlon James (2014) I produced using someone else's software (referred to as lit-cascades in the script), and performs some additional, very basic social network analysis of that graph. 
 
 Perhaps the first thing you will notice when you start reading this script is that I am a pretty terrible R programmer. I don't even do anything fancy like use pipe operators or write my own functions. To that I say: who cares! What I am showing you is not a shining example of excellent code that you should strive to emulate; doubtless there are other, more efficient and elegant ways to accomplish what I do in this script. I have been learning some of them along with you via these tutorials (as a self-taught programmer, I am always learning something new). Rather, it is simply an example of some R code that accomplishes a job, however messily (in this case, some social network analysis). I hope this emphasizes that you do not have to be a great programmer to do this kind of work, or even a very good one, as long as you understand the concepts behind the methods.
 
-Your goal for this exercise is to try to follow along with what I've done and explain its logic. We're only going to do this for part of the script, lines 1-71. In these lines, you will encounter some new functions that we haven't discussed. You may not even know what social network analysis is (if that's the case, and if you want to know, I recommend [this piece](http://www.scottbot.net/HIAL/index.html@p=6279.html) by Scott Weingart to give you some vocabulary). All of that is fine. For each function I've listed below, write, in your own words, a brief explanation of that function and how I use it in the script. That's it. 
+Your goal for this exercise is to try to follow along with what I've done and explain its logic. We're only going to do this for part of the script, lines 1-71. In these lines, you will encounter some new functions that we haven't discussed. You may not even know what social network analysis is (if that's the case, and if you want to know, I recommend [this piece](http://www.scottbot.net/HIAL/index.html@p=6279.html) by Scott Weingart to give you some vocabulary). All of that is fine. You don't need to fully understand social network analysis to follow along with the data transformations this script makes possible. For each function I've listed below, write, in your own words, a brief explanation of that function and how I use it in the script. That's it. 
 
 You're welcome to explore the script further, and I've given you all of the social network data that I used in your `data` folder (I analyzed six different novels in all), so feel free to use it if you want. But for this tutorial, just work with the `Brief_History` data and only focus on lines 1-71.
 
