@@ -15,6 +15,8 @@ head(wordcounts)
 
 # Exercises
 
+**Note:** I took this question out of tutorial 3 in the interest of time. But I've preserved the question and answer here in case you are curious.
+
 1. Above, we created a concordance for the single text. Can you create a concordance for the entire set of texts from the Wright corpus? BONUS: You'll probably notice that your new data frame's columns seem a bit out of order, can you rearrange them so that they are: filename, word, word2, word3? (Hint: Check out the `select()` function in the `dplyr` package.)
 
 ```{r}
